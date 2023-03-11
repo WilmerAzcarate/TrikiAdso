@@ -94,6 +94,7 @@ main > section > .fila > .columna{
     
     width: 30%;
     height: 100%;
+    padding: auto;
 
     display: flex;
     justify-content: center;
