@@ -1,0 +1,143 @@
+/*
+    Los estilos en cada declaracion siempre deben ir de la siguiente forma:
+
+    1. Posicionamiento: Position
+    2. Box model: Margin, Padding, Border, Content.
+    3. Tipografia: Tipo, tamaño, color, etc...
+    4. Estilos visuales: Box shadow, border-radius, gradient, etc...
+    5. Otros: Reglas css y demas.
+
+*/
+
+/*colores y tipografias*/
+:root{
+    --verde-oscuro:#178046;
+    --verde-claro:#1A8040;
+    --negro:#000000;
+    --blango: #ffffff;
+}
+
+/*reset de estilos*/
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*se cambia el tamaño por defecto de la letra en en el navegador
+a 10 px */
+html{
+    font-size: 62.5%;
+}
+
+/*header*/
+
+header{
+
+    width: 100%;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+
+    border-bottom: 0.3rem solid var(--verde-oscuro);
+    background-color: var(--blango);
+
+}
+
+header > img {
+    width: 5rem;
+    height: 5rem;
+    flex-grow: 25%;
+}
+
+header > h1 {
+    font-size: 5rem;
+    color: var(--verde-oscuro);
+}
+
+/*main*/
+main{
+    min-height: 530px;
+    display: flex;
+    justify-content: center;
+
+    background-image: url('../src/assets/images/img1.jpg');
+}
+
+main > section{
+
+    padding: 10px;
+
+    margin-top: 20px;
+    width: 500px;
+    height: 500px;
+
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+
+    border: 0.5rem solid var(--negro);
+    background-color: var(--blango);
+}
+
+main > section > .fila{
+    width: 100%;
+    height: 150px;
+    display: flex;
+    justify-content: space-around;
+}
+
+main > section > .fila > .columna{
+    
+    width: 30%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+
+    font-size: 10rem;
+    text-align: center;
+    color: var(--negro);
+
+    background: none;
+    border: 0.5rem solid var(--negro);
+}
+
+main > section > .fila > .columna:hover{
+
+    color: var(--verde-claro);
+
+    border-color: var(--verde-claro);
+    cursor: pointer;
+}
+main> section > .fila > .columna:active{
+
+    color: var(--blango);
+
+    border-color: var(--negro);
+    cursor: pointer;
+    background-color: var(--verde-claro);
+}
+
+/*footer*/
+footer{
+    width: 100%;
+
+    display: flex;
+    flex: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+
+    border-top: 0.3rem solid var(--verde-oscuro);
+    background-color: var(--blango);
+}
+
+footer > h2 {
+
+    font-size: 3rem;
+    color: var(--verde-oscuro);
+
+}
