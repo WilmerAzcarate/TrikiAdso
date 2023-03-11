@@ -8,7 +8,6 @@ let posiciones=[
     ['','','']
 ];
 
-
 /*esta variable define quien debe jugar luego*/
 let turno=false;
 /*esta variable es un contador que sirve para saber cuando se produce un empate*/
@@ -17,21 +16,55 @@ let contador_turnos=0;
 let intentos_jugador1=0;
 let intentos_jugador2=0;
 
+/*almacena el resultado del partido*/ 
+let resultado='';
+
 /*accedemos a la ventana y verificamos que el contenido del dominio cargue correctamente*/
 window.addEventListener('DOMContentLoaded',()=>{
+
    triki.innerHTML=dibujarTablero(posiciones);
    const casillas=document.querySelectorAll('.columna');
+
    casillas.forEach((casilla)=>{
     casilla.addEventListener('click',()=>{
+        
+        /*posición de la casilla*/
         let fila=casilla.getAttribute('fila');
         let columna=casilla.getAttribute('columna');
+
+        /*Ficha en la casilla, solo puede tomar el valor x y el valor o*/
+        let simbolo=selecionarCasilla(posiciones[fila][columna],turno);
+
+        /*dibuja el simbolo en la casilla*/
+        casilla.value=simbolo;
+
+        /*turno actual*/
         turno=cambioDeTurno(turno);
+        if(simbolo==posiciones[fila][columna]){
+            /*repite el turno*/
+            turno=cambioDeTurno(turno);
+        }else{
+            contador_turnos++;
+            posiciones[fila][columna]=simbolo;
+            if(simbolo=='x'){
+                intentos_jugador1++;
+            }else{
+                intentos_jugador2++;
+            }
+            resultado=verificarResultado(contador_turnos,resultado,posiciones);
+            if(resultado!=''){
+                console.log(resultado);
+            }
 
 
-
+        }
         
+        
+       
     })
+    
    })
+   
 });
 
 /*esta funcion dibuja el tablero*/
@@ -48,11 +81,12 @@ function dibujarTablero(arreglo){
     arreglo.map((fila)=>{
         tablero+=`<div class="fila">`;
         fila.map((columna)=>{
-            tablero+=`<button class="columna" 
+            tablero+=`<input type="button" 
+                            class="columna" 
                             fila="${n_fila}" 
-                            columna="${n_columna}">
-                            ${columna}
-                    </button>`
+                            columna="${n_columna}"
+                            value="${columna}">
+                            `
             n_columna++;
         })
         tablero+=`</div>`
@@ -69,4 +103,158 @@ function cambioDeTurno(turno){
 }
 
 /*muestra una respuesta segun corresponda el turno*/
+function selecionarCasilla(simbolo,turno){
+    if(simbolo==''){
+        /*x para player 1 y o para player 2*/
+        if(!turno){
+            return 'x';
+        }else{
+            return 'o';
+        }
+    }else{
+        alert('Casilla ocupada vuelva a elegir');
+        return simbolo;
+    }
+}
 
+/*verifica si los jugadores empataron*/
+function verificarResultado(contador_turnos,resultado,arreglo){
+    if(contador_turnos==9&&resultado!='victoria'){
+        return 'Empate'
+    }else{
+        resultado=verificarFilas(arreglo);
+        if(resultado=='victoria'){
+            return resultado;
+        }
+        resultado=verificarColumnas(arreglo);
+        if(resultado=='victoria'){
+            return resultado;
+        }
+        /*resultado=verificarDiagonal(arreglo);
+        if(resultado=='victoria'){
+            return resultado;
+        }*/
+    }
+    return '';
+}
+
+/*verifica si el jugador actual puso tres laterales seguidos*/
+function verificarFilas(arreglo){
+    /* guarda el valor de la posición anterior*/
+    let anterior='';
+
+    /*cuenta cuantas laterales coloco un mismo jugador*/
+    let contador_lateral=0;
+
+    /*almacena el simbolo que se esta verificando*/
+    let simbolo='';
+
+    for (let fila = 0; fila < arreglo.length; fila++) {
+        
+        for (let columna = 0; columna < arreglo.length; columna++) {
+            
+            simbolo=arreglo[fila][columna];
+
+            if (columna==0) {
+                if (simbolo!='') {
+                    anterior=simbolo;
+                    contador_lateral++;
+                }
+            }else{
+                if (simbolo!='') {
+                    
+                    if(anterior==simbolo){
+                        contador_lateral++;
+                    }else{
+                        contador_lateral=0;
+                    }
+                    
+                }
+            }
+            if(contador_lateral==3){
+                return 'victoria';
+            } 
+        }
+       contador_lateral=0;
+    }
+    return '';
+}
+
+/*verifica si el jugador actual puso 3 verticales seguidos*/ 
+function verificarColumnas(arreglo) {
+        /* guarda el valor de la posición anterior*/
+        let anterior='';
+
+        /*cuenta cuantas verticales coloco un mismo jugador*/
+        let contador_vertical=0;
+    
+        /*almacena el simbolo que se esta verificando*/
+        let simbolo='';
+    
+        for (let columna = 0; columna < arreglo.length; columna++) {
+            
+            for (let fila = 0; fila < arreglo.length; fila++) {
+                
+                simbolo=arreglo[fila][columna];
+    
+                if (fila==0) {
+                    if (simbolo!='') {
+                        anterior=simbolo;
+                        contador_vertical++;
+                    }
+                }else{
+                    if (simbolo!='') {
+                        
+                        if(anterior==simbolo){
+                            contador_vertical++;
+                        }else{
+                            contador_vertical=0;
+                        }
+                        
+                    }
+                }
+                if(contador_vertical==3){
+                    return 'victoria';
+                } 
+            }
+           contador_vertical=0;
+        }
+        return '';
+}
+
+/*verificar diagonal superior izquierda a inferior derecha*/ 
+function verificarDiagonal(arreglo) {
+    /* guarda el valor de la posición anterior*/
+    let anterior='';
+
+    /*cuenta cuantas diagonales coloco un mismo jugador*/
+    let contador_diagonal=0;
+    
+    /*almacena el simbolo que se esta verificando*/
+    let simbolo='';
+
+    for (let posicion = 0; posicion < array.length; posicion++) {
+        
+        simbolo=arreglo[posicion][posicion];
+        if(posicion==0){
+
+            if(simbolo!=''){
+                anterior=simbolo;
+                contador_diagonal++
+            }else{
+                if(simbolo!=''){
+                    
+                }
+            }
+
+        }
+        
+    }
+    return '';
+
+}
+
+/*verificar diagonal superior derecha a inferior izquierda*/ 
+function verificarDiagonalInversa(arreglo){
+
+}
