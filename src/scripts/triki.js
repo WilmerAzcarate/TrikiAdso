@@ -55,16 +55,12 @@ window.addEventListener('DOMContentLoaded',()=>{
             if(resultado!=''){
                 console.log(resultado);
             }
+        } 
 
-
-        }
-        
-        
-       
     })
-    
+
    })
-   
+  
 });
 
 /*esta funcion dibuja el tablero*/
@@ -130,10 +126,14 @@ function verificarResultado(contador_turnos,resultado,arreglo){
         if(resultado=='victoria'){
             return resultado;
         }
-        /*resultado=verificarDiagonal(arreglo);
+        resultado=verificarDiagonal(arreglo);
         if(resultado=='victoria'){
             return resultado;
-        }*/
+        }
+        resultado=verificarDiagonalInversa(arreglo);
+        if(resultado=='victoria'){
+            return resultado;
+        }
     }
     return '';
 }
@@ -217,7 +217,7 @@ function verificarColumnas(arreglo) {
                     return 'victoria';
                 } 
             }
-           contador_vertical=0;
+            contador_vertical=0;
         }
         return '';
 }
@@ -233,22 +233,26 @@ function verificarDiagonal(arreglo) {
     /*almacena el simbolo que se esta verificando*/
     let simbolo='';
 
-    for (let posicion = 0; posicion < array.length; posicion++) {
+    for (let posicion = 0; posicion < arreglo.length; posicion++) {
         
         simbolo=arreglo[posicion][posicion];
         if(posicion==0){
-
             if(simbolo!=''){
                 anterior=simbolo;
-                contador_diagonal++
-            }else{
-                if(simbolo!=''){
-                    
+                contador_diagonal++;
+            }
+        }else{
+            if(simbolo!=''){
+                if(simbolo==anterior){
+                    contador_diagonal++;
+                }else{
+                    contador_diagonal=0;
                 }
             }
-
         }
-        
+        if(contador_diagonal==3){
+            return 'victoria';
+        }
     }
     return '';
 
@@ -256,5 +260,43 @@ function verificarDiagonal(arreglo) {
 
 /*verificar diagonal superior derecha a inferior izquierda*/ 
 function verificarDiagonalInversa(arreglo){
+    /* guarda el valor de la posición anterior*/
+    let anterior='';
 
+    /*cuenta cuantas diagonales coloco un mismo jugador*/
+    let contador_diagonal=0;
+    
+    /*almacena el simbolo que se esta verificando*/
+    let simbolo='';
+
+    /*almacena el tamaño del arreglo*/ 
+    let tamaño=arreglo.length;
+
+    /*se mueve en la direccion contraria a posicion*/ 
+    let posicion_inversa=0;
+
+    for (let posicion = tamaño-1; posicion>=0; posicion--) {
+        
+        simbolo=arreglo[posicion_inversa][posicion];
+       
+        if(posicion_inversa==0){
+            if(simbolo!=''){
+                anterior=simbolo;
+                contador_diagonal++;
+            }
+        }else{
+            if(simbolo!=''){
+                if(simbolo==anterior){
+                    contador_diagonal++;
+                }else{
+                    contador_diagonal=0;
+                }
+            }
+        }
+        if (contador_diagonal==3) {
+            return 'victoria';
+        }
+        posicion_inversa++;   
+    }
+    return '';
 }
