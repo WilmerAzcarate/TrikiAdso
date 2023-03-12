@@ -21,47 +21,62 @@ let resultado='';
 
 /*accedemos a la ventana y verificamos que el contenido del dominio cargue correctamente*/
 window.addEventListener('DOMContentLoaded',()=>{
+    triki.innerHTML=dibujarTablero(posiciones);
+    const casillas=document.querySelectorAll('.columna');
+    
 
-   triki.innerHTML=dibujarTablero(posiciones);
-   const casillas=document.querySelectorAll('.columna');
-
-   casillas.forEach((casilla)=>{
-    casilla.addEventListener('click',()=>{
+    casillas.forEach((casilla)=>{
+        casilla.addEventListener('click',()=>{
         
-        /*posición de la casilla*/
-        let fila=casilla.getAttribute('fila');
-        let columna=casilla.getAttribute('columna');
+            /*posición de la casilla*/
+            let fila=casilla.getAttribute('fila');
+            let columna=casilla.getAttribute('columna');
 
-        /*Ficha en la casilla, solo puede tomar el valor x y el valor o*/
-        let simbolo=selecionarCasilla(posiciones[fila][columna],turno);
+            /*Ficha en la casilla, solo puede tomar el valor x y el valor o*/
+            let simbolo=selecionarCasilla(posiciones[fila][columna],turno);
 
-        /*dibuja el simbolo en la casilla*/
-        casilla.value=simbolo;
+            /*dibuja el simbolo en la casilla*/
+            casilla.value=simbolo;
 
-        /*turno actual*/
-        turno=cambioDeTurno(turno);
-        if(simbolo==posiciones[fila][columna]){
-            /*repite el turno*/
+            /*turno actual*/
             turno=cambioDeTurno(turno);
-        }else{
-            contador_turnos++;
-            posiciones[fila][columna]=simbolo;
-            if(simbolo=='x'){
-                intentos_jugador1++;
+            if(simbolo==posiciones[fila][columna]){
+                /*repite el turno*/
+                turno=cambioDeTurno(turno);
             }else{
-                intentos_jugador2++;
-            }
-            resultado=verificarResultado(contador_turnos,resultado,posiciones);
-            if(resultado!=''){
-                console.log(resultado);
-            }
-        } 
+                contador_turnos++;
+                posiciones[fila][columna]=simbolo;
+                if(simbolo=='x'){
+                    intentos_jugador1++;
+                }else{
+                    intentos_jugador2++;
+                }
+                resultado=verificarResultado(contador_turnos,resultado,posiciones);
+                if(resultado!=''){
+                    
+                    if(resultado=='victoria'){
+                        if(turno){
+                            alertaVictoria(resultado,+intentos_jugador1,'Jugador 1');
+                        }else{
+                            alertaVictoria(resultado,+intentos_jugador2,'Jugador 2');
+                        }
+                    }
+                    if(resultado=='empate'){
+                       alertaEmpate(resultado,intentos_jugador1,intentos_jugador2);
+                    }
+                }
+            } 
 
-    })
+        })
 
    })
   
 });
+
+/*recarga la ventana*/
+function reiniciar(){
+    window.location.reload();
+}
 
 /*esta funcion dibuja el tablero*/
 function dibujarTablero(arreglo){
@@ -93,6 +108,19 @@ function dibujarTablero(arreglo){
     return tablero;
 }
 
+/*esta funcion muestra una alerta con el resultado cuando los jugadores empatan*/ 
+function alertaEmpate(resultado,jugador_1,jugador_2){
+    alert(resultado+'\n Jugador 1: '+jugador_1+' Intentos \n Jugador 2: '+jugador_2);
+    reiniciar();
+}
+/*esta funcion muestra una alerta con el resultado cuando un jugador gana*/ 
+function alertaVictoria(resultado,intentos,jugador) {
+    alert(resultado+' '+jugador+'\n intentos: '+intentos);
+    reiniciar();
+}
+
+/*esta funcion dibuja el resultado cuando uno de los jugadores gana*/
+
 /*cambia el turno*/ 
 function cambioDeTurno(turno){
     return !turno;
@@ -116,7 +144,7 @@ function selecionarCasilla(simbolo,turno){
 /*verifica si los jugadores empataron*/
 function verificarResultado(contador_turnos,resultado,arreglo){
     if(contador_turnos==9&&resultado!='victoria'){
-        return 'Empate'
+        return 'empate'
     }else{
         resultado=verificarFilas(arreglo);
         if(resultado=='victoria'){
